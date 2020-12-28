@@ -1,5 +1,6 @@
 package com.studyolle.account;
 
+import com.studyolle.config.AppProperties;
 import com.studyolle.domain.Account;
 import com.studyolle.domain.Tag;
 import com.studyolle.domain.Zone;
@@ -25,9 +26,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +43,8 @@ public class AccountService implements UserDetailsService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final TemplateEngine templateEngine; // 타임리프의 가장 핵심적인 클래스
+    private final AppProperties appProperties;
 
     /**
      * 회원 가입
@@ -77,25 +79,43 @@ public class AccountService implements UserDetailsService {
      */
     //== 회원가입 시 인증메일 전송 ==//
     public void sendSignUpConfirmEmail(Account newAccount) {
+        Context context = new Context(); // model과 같은 역할
+        context.setVariable("link", "/check-email-token?token=" + newAccount.getEmailCheckToken() +
+                "&email=" + newAccount.getEmail());
+        context.setVariable("nickname", newAccount.getNickname());
+        context.setVariable("linkName", "이메일 인증하기");
+        context.setVariable("message", "스터디올래 서비스를 사용하려면 링크를 클릭하세요");
+        context.setVariable("host", appProperties.getHost());
+        String message = templateEngine.process("mail/simple-link", context); // prefix :=> template / postfix :=> .html
+
+        //== 메일 전송 폼 객체 생성 ==//
         EmailMessage emailMessage = EmailMessage.builder()
                 .to(newAccount.getEmail())
                 .subject("스터디올래, 회원 가입 인증")
-                .message("/check-email-token?token=" + newAccount.getEmailCheckToken() +
-                        "&email=" + newAccount.getEmail())
+                .message(message)
                 .build();
 
+        //== 메일 전송 ==//
         emailService.sendEmail(emailMessage);
     }
 
-    //== 패스워드 없이 로그인 버튼 클릭 시 인증메일 전송==//
+    //== 패스워드 없이 로그인 버튼 클릭 시 인증메일 전송 ==//
     public void sendLoginLink(Account account) {
         account.generateEmailCheckToken(); // 이메일체크 랜덤 토큰 생성, 토큰 생성 시간 저장
+
+        Context context = new Context(); // model과 같은 역할
+        context.setVariable("link", "/login-by-email?token=" + account.getEmailCheckToken() +
+                "&email=" + account.getEmail());
+        context.setVariable("nickname", account.getNickname());
+        context.setVariable("linkName", "스터디올래 로그인하기");
+        context.setVariable("message", "로그인 하려면 링크를 클릭하세요");
+        context.setVariable("host", appProperties.getHost());
+        String message = templateEngine.process("mail/simple-link", context); // prefix :=> template / postfix :=> .html
 
         EmailMessage emailMessage = EmailMessage.builder()
                 .to(account.getEmail())
                 .subject("스터디올래, 로그인 링크")
-                .message("/login-by-email?token=" + account.getEmailCheckToken() +
-                        "&email=" + account.getEmail())
+                .message(message)
                 .build();
 
         emailService.sendEmail(emailMessage);
