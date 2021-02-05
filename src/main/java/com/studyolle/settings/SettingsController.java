@@ -66,7 +66,7 @@ public class SettingsController {
     public String updateProfileForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
 //        model.addAttribute(new Profile(account)); // th:field에서 사용함으로써 Profile 객체와 연결 가능, account 객체의 정보를 가지고 인자있는 생성자를 통하여 Profile 객체를 만듬
-        model.addAttribute(modelMapper.map(account, Profile.class)); // Profile 타입의 인스턴스가 만들어지고 account에 들어있는 데이터로 채워짐
+        model.addAttribute(modelMapper.map(account, Profile.class)); // Profile 타입의 인스턴스가 만들어지고 account에 들어있는 데이터로 채워짐, 위 처럼 안해도 되는 기능(ModelMapper)
         return SETTINGS + PROFILE; // return 타입을 void로 하면 알아서 URL명으로 리턴한다
     }
 
@@ -82,7 +82,7 @@ public class SettingsController {
         attributes.addFlashAttribute("message", "프로필을 수정했습니다."); /* 리다이렉트 시키고 한번쓰고 말 데이터를 보내는 용도
                                                                                      @GetMapping(SETTINGS_PROFILE_URL) 여기로 리다이렉트 시켜주고
                                                                                      Model 객체로 자동으로 들어간다 */
-        return "redirect:/" +  SETTINGS + PROFILE; // 사용자가 refesh 했을시 폼서브밋이 다시 일어나지 않도록 리다이렉트 시켜줌
+        return "redirect:/" +  SETTINGS + PROFILE; // 사용자가 refresh 했을시 폼서브밋이 다시 일어나지 않도록 리다이렉트 시켜줌
     }
 
     @GetMapping(PASSWORD)

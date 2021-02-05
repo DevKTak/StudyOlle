@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WebSecurit
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .mvcMatchers("/", "/login", "/sign-up", "check-email-token",
-                    "/email-login", "/login-by-email", "/search/study").permitAll() // 권한 확인없이 접근 해야할 요청들
+                    "/email-login", "/login-by-email", "/search/study").permitAll() // 권한 확인없이 접근 해야 할 요청들
             .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll() // 프로필 요청은 GET만 허용
             .anyRequest().authenticated(); // 나머지 요청은 로그인 (인증받은 사용자) 해야만 사용 가능
 
