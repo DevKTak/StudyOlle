@@ -1,5 +1,6 @@
 package com.studyolle.account;
 
+import com.studyolle.account.form.SignUpForm;
 import com.studyolle.config.AppProperties;
 import com.studyolle.domain.Account;
 import com.studyolle.domain.Tag;
@@ -12,10 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.modelmapper.ModelMapper;
-import org.springframework.mail.MailMessage;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
