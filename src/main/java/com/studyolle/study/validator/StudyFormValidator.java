@@ -13,7 +13,6 @@ public class StudyFormValidator implements Validator {
 
     private final StudyRepository studyRepository;
 
-
     @Override
     public boolean supports(Class<?> clazz) {
         return StudyForm.class.isAssignableFrom(clazz); // StudyForm 타입의 인스턴스를 검사할 것을 명시
@@ -22,7 +21,7 @@ public class StudyFormValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         StudyForm studyForm = (StudyForm)target;
-        if (studyRepository.existByPath(studyForm.getPath())) {
+        if (studyRepository.existsByPath(studyForm.getPath())) {
             errors.rejectValue("path", "wrong.path", "해당 스터디 경로값을 사용할 수 없습니다.");
         }
     }

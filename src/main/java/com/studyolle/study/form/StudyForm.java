@@ -9,9 +9,9 @@ import javax.validation.constraints.Pattern;
 @Data
 public class StudyForm {
 
-    @NotBlank
+    @NotBlank(message = "백엔드 StudyForm path 비어있음")
     @Length(min = 2, max = 20)
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9_-]{2,20}$")
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9_-]{2,20}$", message = "백엔드 StudyForm path pattern 에러")
     private String path;
 
     @NotBlank
