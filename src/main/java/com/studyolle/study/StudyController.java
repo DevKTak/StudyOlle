@@ -34,13 +34,6 @@ public class StudyController {
         webDataBinder.addValidators(studyFormValidator);
     }
 
-    @GetMapping("/study/{path}")
-    public String viewStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
-        model.addAttribute(account);
-        model.addAttribute(studyRepository.findByPath(path));
-        return "study/view";
-    }
-
     @GetMapping("/new-study")
     public String newStudyForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
@@ -59,10 +52,19 @@ public class StudyController {
         return "redirect:/study/" + URLEncoder.encode(newStudy.getPath(), StandardCharsets.UTF_8); // path가 한글일 수도 있기 떄문
     }
 
+    @GetMapping("/study/{path}")
+    public String viewStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudy(path);
+        model.addAttribute(account);
+        model.addAttribute(study);
+        return "study/view";
+    }
+
     @GetMapping("/study/{path}/members")
     public String viewStudyMembers(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudy(path);
         model.addAttribute(account);
-        model.addAttribute(studyRepository.findByPath(path));
+        model.addAttribute(study);
         return "study/members";
     }
 

@@ -103,13 +103,9 @@ public class AccountController {
 
     @GetMapping("/profile/{nickname}")
     public String viewProfile(@PathVariable String nickname, Model model, @CurrentAccount Account account) {
-        Account byNickname = accountRepository.findByNickname(nickname);
-
-        if (nickname == null) {
-            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
-        }
-        model.addAttribute(byNickname); // key 값은 byNickname 객체 타입의 이름을 camelcase로 자동지정된다 =>>> account
-        model.addAttribute("isOwner", byNickname.equals(account)); // Account 엔티티에 @EqualsAndHashCode(of = "id") 사용
+        Account accountToView = accountService.getAccount(nickname);
+        model.addAttribute(accountToView); // key 값은 accountToView 객체 타입의 이름을 camelcase로 자동지정된다 =>>> account
+        model.addAttribute("isOwner", accountToView.equals(account)); // Account 엔티티에 @EqualsAndHashCode(of = "id") 사용
         return "account/profile";
     }
 

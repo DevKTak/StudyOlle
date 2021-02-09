@@ -71,7 +71,6 @@ public class Study {
     }
 
     /** view 에서 호출한 메서드 **/
-
     //== 스터디에 가입이 가능한지 ==//
     public boolean isJoinable(UserAccount userAccount) {
         Account account = userAccount.getAccount();
@@ -90,6 +89,11 @@ public class Study {
     public boolean isManager(UserAccount userAccount) {
         return this.managers.contains(userAccount.getAccount());
     }
+    /** End **/
 
+    /** account가 해당 스터디의 매니저인지 **/
+    public boolean isManagedBy(Account account) {
+        return this.getManagers().contains(account);
+    }
 
 }
