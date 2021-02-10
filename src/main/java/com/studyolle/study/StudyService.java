@@ -2,7 +2,9 @@ package com.studyolle.study;
 
 import com.studyolle.domain.Account;
 import com.studyolle.domain.Study;
+import com.studyolle.domain.Zone;
 import com.studyolle.study.form.StudyDescriptionForm;
+import com.studyolle.tag.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,14 +33,6 @@ public class StudyService {
         checkIfManager(account, study);
 
         return study;
-    }
-
-    /** account가 해당 스터디의 매니저인지 **/
-    private void checkIfManager(Account account, Study study) {
-        if (!study.isManagedBy(account)) {
-            // SpringSecurity에 있는 Exception
-            throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");
-        }
     }
 
     /** 스터디가 존재하는지 null 체크 메서드 호출 **/
@@ -76,5 +70,43 @@ public class StudyService {
         study.setUseBanner(false);
     }
 
+    public void addTag(Study study, Tag tag) {
+        study.getTags().add(tag);
+    }
+
+    public void removeTag(Study study, Tag tag) {
+        study.getTags().remove(tag);
+    }
+
+    public void addZone(Study study, Zone zone) {
+        study.getZones().add(zone);
+    }
+
+    public void removeZone(Study study, Zone zone) {
+        study.getZones().remove(zone);
+    }
+
+
+    public Study getStudyToUpdateTag(Account account, String path) {
+        Study study = repository.findAccountWithTagsByPath(path);
+        checkIfExistingStudy(path, study);
+        checkIfManager(account, study);
+        return study;
+    }
+
+    public Study getStudyToUpdateZone(Account account, String path) {
+        Study study = repository.findAccountWithZonesByPath(path);
+        checkIfExistingStudy(path, study);
+        checkIfManager(account, study);
+        return study;
+    }
+
+    /** account가 해당 스터디의 매니저인지 **/
+    private void checkIfManager(Account account, Study study) {
+        if (!study.isManagedBy(account)) {
+            // SpringSecurity에 있는 Exception
+            throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");
+        }
+    }
 
 }

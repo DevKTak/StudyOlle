@@ -1,7 +1,7 @@
 package com.studyolle.domain;
 
+import com.studyolle.tag.Tag;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
