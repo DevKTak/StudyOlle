@@ -60,4 +60,21 @@ public class StudyService {
     public void updateStudyDescription(Study study, StudyDescriptionForm studyDescriptionForm) {
         modelMapper.map(studyDescriptionForm, study); //
     }
+
+    /** 배너 이미지 업데이트 **/
+    public void updateStudyImage(Study study, String image) {
+        study.setImage(image);
+    }
+
+    /** 배너 사용 O **/
+    public void enableStudyBanner(Study study) {
+        study.setUseBanner(true);
+    }
+
+    /** 배너 사용 X **/
+    public void disableStudyBanner(Study study) {
+        study.setUseBanner(false);
+    }
+
+
 }
