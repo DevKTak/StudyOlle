@@ -6,11 +6,15 @@ import com.studyolle.domain.Zone;
 import com.studyolle.study.form.StudyDescriptionForm;
 import com.studyolle.tag.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.studyolle.study.form.StudyForm.VALID_PATH_PATTERN;
+
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -131,4 +135,27 @@ public class StudyService {
         study.stopRecruit();
     }
 
+    /** 스터디 path 유효성 검증 **/
+    public boolean isValidPath(String newPath) {
+        if (!newPath.matches(VALID_PATH_PATTERN)) {
+            return false;
+        }
+
+        return !repository.existsByPath(newPath);
+    }
+
+    /** 스터디 path 업데이트 **/
+    public void updateStudyPath(Study study, String newPath) {
+        study.setPath(newPath);
+    }
+
+    /** 스터디 타이틀 유효성 검증 **/
+    public boolean isValidTitle(String newTitle) {
+        return newTitle.length() <= 50;
+    }
+
+    /** 스터디 타이틀 업데이트 **/
+    public void updateStudyTitle(Study study, String newTitle) {
+        study.setTitle(newTitle);
+    }
 }
