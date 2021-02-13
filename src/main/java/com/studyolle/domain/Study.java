@@ -5,6 +5,8 @@ import com.studyolle.tag.Tag;
 import lombok.*;
 
 import javax.persistence.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +33,8 @@ import java.util.Set;
         @NamedAttributeNode("managers")})
 @NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
         @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withMembers", attributeNodes = {
+        @NamedAttributeNode("members")})
 
 @Entity
 @Getter @Setter @EqualsAndHashCode(of ="id")
@@ -79,6 +83,8 @@ public class Study {
     private boolean closed; // 종료 여부
 
     private boolean useBanner; // 배너 사용 여부
+
+    private int memberCount;
 
     /** 매니저 추가 **/
     public void addManger(Account account) {
@@ -153,9 +159,23 @@ public class Study {
         return this.published && this.recruitingUpdatedDateTime == null || this.recruitingUpdatedDateTime.isBefore(LocalDateTime.now().minusHours(1));
     }
 
+    public void addMember(Account account) {
+        this.getMembers().add(account);
+        this.memberCount++;
+    }
+
+    public void removeMember(Account account) {
+        this.getMembers().remove(account);
+        this.memberCount--;
+    }
+
     /** account가 해당 스터디의 매니저인지 **/
     public boolean isManagedBy(Account account) {
         return this.getManagers().contains(account);
     }
 
+    /** 스터디 URL 인코딩 **/
+    public String getEncodedPath() {
+        return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
+    }
 }

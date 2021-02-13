@@ -167,4 +167,15 @@ public class StudyService {
             throw new IllegalArgumentException("스터디를 삭제할 수 없습니다.");
         }
     }
+
+    /** 스터디 멤버 추가 (스터디 가입 버튼) **/
+    public void addMember(Study study, Account account) {
+        study.addMember(account);
+    }
+
+    /** 스터디 멤버 탈퇴 (스터디 가입 버튼) **/
+    public void removeMember(Study study, Account account) {
+        study.removeMember(account);
+    }
+
 }
